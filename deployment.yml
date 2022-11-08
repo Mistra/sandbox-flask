@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sandbox-flask-deployment
+  labels:
+    app: sandbox-flask
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sandbox-flask
+  template:
+    metadata:
+      labels:
+        app: sandbox-flask
+    spec:
+      containers:
+        - name: sandbox-flask
+          image: 073862368213.dkr.ecr.eu-west-1.amazonaws.com/sandbox-flask:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 5000
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "100M"
+            limits:
+              cpu: "800m"
+              memory: "200M"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sandbox-flask-service
+spec:
+  selector:
+    app: sandbox-flask
+  ports:
+    - protocol: TCP
+      port: 5000
+      targetPort: 5000
